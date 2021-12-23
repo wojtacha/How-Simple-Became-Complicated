@@ -1,0 +1,25 @@
+{
+  "name": "how-simple-became-complicated",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "server": "nodemon src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.2",
+    "body-parser": "^1.19.1",
+    "express-validator": "^6.14.0",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "express": "^4.17.2",
+    "uuid": "^8.3.2"
+  }
+}
