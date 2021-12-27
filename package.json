@@ -2,9 +2,17 @@
   "name": "how-simple-became-complicated",
   "version": "0.0.1",
   "description": "",
-  "main": "main.js",
+  "main": "build/main.js",
+  "types": "build/server.d.ts",
+  "files": [
+    "build",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
   "scripts": {
     "server": "nodemon src/app.ts",
+    "server-debug": "DEBUG=express:* nodemon src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
