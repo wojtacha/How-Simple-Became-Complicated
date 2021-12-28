@@ -49,6 +49,10 @@ class UserStorage {
     deleteUser(userId: Token) {
         this.map.delete(userId);
     }
+
+    deleteAccount(userId: Token, accountId:Token) {
+        this.map.get(userId).corelatedAccounts.delete(accountId);
+    }
 }
 export const userStore = new UserStorage();
 

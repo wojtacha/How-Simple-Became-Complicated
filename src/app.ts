@@ -16,8 +16,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     // next();
 // });
 
+
+const ADMIN_TOKEN = "adminc78-d566-4bfb-958f-d127bc8admin";
+
 const allUsers = (request: Request, response: Response, next: NextFunction) => {
     try {
+        if(request.)    
         validationResult(request).throw();
         let values = userStore.getUsers();
         response.status(200).json(values);
@@ -47,9 +51,8 @@ const getRoot = (request: Request, response: Response, next: NextFunction) => {
 app.options("/", optionsRequest);
 app.get("/", getRoot);
 
-const ADMIN_TOKEN = "adminc78-d566-4bfb-958f-d127bc8admin";
 
-app.get("/users/:token",
+app.get("/user/:token",
     header("Content-Type").isIn(["application/json", "application/vnd.api+json"]), param("token").equals(ADMIN_TOKEN),
     allUsers);
 
@@ -80,14 +83,12 @@ const createAccount = (request: Request, response: Response) => {
         let token: Token = userStore.createAccount(request.body.userId);
         console.log("po wsio");
         console.log(token);
-        
+
         response.status(201).json({
             status: "Account created",
             "accountId": token.value,
         });
     } catch (err) {
-        // console.log(err);
-        
         response.status(404).json({ message: "Zjebao sie", error: err });
     }
 };
@@ -115,20 +116,43 @@ app.put(
             }
             return response.status(200).json({ message: "" });
         } catch (err) {
-            console.log(err);
             return response.status(404).json({ message: "Zjebao sie", error: err });
         }
     }
 );
 
 app.delete(
-    "/account/:accountNumber",
+    "/user/:userId",
     header("Content-Type").isIn(["application/json", "application/vnd.api+json"]),
+    param("userId"),
     (request: Request, response: Response, next: NextFunction) => {
-        console.log(request.params);
-        return response.status(201);
+        try {
+            const userId = { value: request.body.userId};
+            userStore.deleteUser(userId);
+        } catch (err) {
+            return response.status(404).json({ message: "Zjebao sie", error: err });
+        }
+
     }
 );
+
+app.delete(
+    "/account/:accountId",
+    header("Content-Type").isIn(["application/json", "application/vnd.api+json"]),
+    param("accountId"),
+    body("userId"),
+    (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const userId: Token = { value: request.body.userId};
+            const accountId: Token = { value: request.params.accountId };
+            userStore.deleteAccount(userId, accountId);
+        } catch (err) {
+            console.log(err);
+            return response.status(404).json({ message: "Zjebao sie", error: err });
+        }
+    }
+);
+
 
 app.listen(port, () => {
     console.log(`Timezones by location application is running on port ${port}.`);
