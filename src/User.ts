@@ -4,7 +4,7 @@ import { Account } from "./Account";
 export class User {
     userId: Token;
     username: string;
-    corelatedAccounts: Map<Token, Account>;
+    corelatedAccounts: Map<string, Account>;
 
     constructor(name: string, userId: Token) {
         this.username = name;
@@ -13,6 +13,8 @@ export class User {
     }
 
     linkAccount(acc: Account) {
+        console.log("linking: " + acc)
+        console.log("linking id: " + acc.accountId)
         this.corelatedAccounts.set(acc.accountId, acc);
     }
 }

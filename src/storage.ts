@@ -7,27 +7,24 @@ export interface Token {
 }
 
 class UserStorage {
-    map: Map<Token, User> = new Map();
+    map: Map<String, User> = new Map();
 
     createUser(name: string): Token {
         let token = uuidv4();
         this.map.set(token, new User(name, token));
-        return { value: token }
+        return { value: token };
     }
 
-    createAccount(userId: Token): Token | never {
-        const user: User = this.map.get(userId);
-        if(user==undefined){
-            throw new Error(`User with given id: ${userId} does not exist`)
-        }
-        
+    createAccount(userId: Token): Token {
+        const user: User = this.map.get(userId.value);
         let token = uuidv4();
         user.linkAccount(new Account(token));
         return { value: token };
     }
 
-    getUser(token: Token): User {
-        return this.map.get(token);
+    getUser(token: Token): UserProjection {
+        let user: User = this.map.get(token.value);
+        return new UserProjection(user);
     }
 
     getUsers() {
@@ -35,24 +32,36 @@ class UserStorage {
     }
 
     addFunds(userId: Token, accountId: Token, amount: number): Boolean {
-        const user: User = this.map.get(userId);
-        if(user==undefined){
-            throw new TypeError(`User with given id: ${userId} does not exist`)
+        const user: User = this.map.get(userId.value);
+        
+        let account: Account = user.corelatedAccounts.get(accountId.value);
+        let added = account.addFunds(amount)
+        if(this.checkProblematicBalance(user)){
+                Array.from(user.corelatedAccounts.values()).forEach(account => {
+                    account.blockAccount()
+                })    
         }
-        const account: Account = user.corelatedAccounts.get(accountId);
-        if(account==undefined){
-            throw new TypeError(`Account with given id: ${accountId} does not exist`)
+        return ( added && !account.blocked )
+    }
+
+    private checkProblematicBalance(user: User): Boolean {
+        const accounts: Account[] = Array.from(user.corelatedAccounts.values());
+        let sum: number = accounts.reduce((accumulator, account) => {
+            return accumulator + account.balance;
+        }, 0);
+
+        if (sum >= 50000) {
+            return true;
         }
-        return account.addFunds(amount)
+        return false;
     }
 
     deleteUser(userId: Token) {
-        this.map.delete(userId);
+        this.map.delete(userId.value);
     }
 
-    deleteAccount(userId: Token, accountId:Token) {
-        this.map.get(userId).corelatedAccounts.delete(accountId);
+    deleteAccount(userId: Token, accountId: Token) {
+        this.map.get(userId.value).corelatedAccounts.delete(accountId.value);
     }
 }
 export const userStore = new UserStorage();
-

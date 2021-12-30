@@ -1,11 +1,11 @@
 import { Token } from './storage';
 
 export class Account {
-    accountId: Token;
+    accountId: string;
     balance: number;
     blocked: Boolean;
 
-    constructor(uuid: Token) {
+    constructor(uuid: string) {
         this.accountId = uuid;
         this.balance = 0;
         this.blocked = false;

@@ -1,0 +1,337 @@
+{
+	"info": {
+		"_postman_id": "f78ebaca-87e1-49eb-9645-52e236ee76a1",
+		"name": "HowSimpleBecameComplicated",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PutMoney",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// const url = \"http://localhost:3000\"",
+							"// let getUserId = {",
+							"//     url: `${url}/user`,",
+							"//     method: \"POST\",",
+							"//     body: {",
+							"//         mode: 'raw',",
+							"//         raw: { 'username': 'UserForTest' }",
+							"",
+							"//     },",
+							"//     header: {",
+							"//         'Content-Type': 'application/json'",
+							"//     }",
+							"// };",
+							"",
+							"// pm.sendRequest(getUserId, function (err, response) {",
+							"//     if (err) {",
+							"//         console.log(err);",
+							"//     } else {",
+							"//         let userIdentification = response.json().userId;",
+							"//         let request = {",
+							"//             url: `${url}/user/${userIdentification}/account`,",
+							"//             method: \"POST\",",
+							"//             header: {",
+							"//                 'Content-Type': 'application/json'",
+							"//             }",
+							"//         };",
+							"",
+							"//         pm.sendRequest(request, function (err, response1) {",
+							"//             if (err) {",
+							"//                 console.log(err);",
+							"//             } else {",
+							"//                 pm.variables.set(\"userId\", userIdentification);",
+							"//                 pm.variables.set(\"accountId\", response1.json().accountId );",
+							"//             }",
+							"//         });",
+							"//     }",
+							"// });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 900\n}"
+				},
+				"url": {
+					"raw": "localhost:3000/user/{{userId}}/account/{{accountId}}/insert",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"{{userId}}",
+						"account",
+						"{{accountId}}",
+						"insert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get root",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"const getUserId = {",
+							"    url: 'http://localhost:3000/user',",
+							"    method: \"POST\",",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw:{'username': 'tuprus'}",
+							"",
+							"    },",
+							"    header: {",
+							"        'Content-Type': 'application/json'",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(getUserId, function (err, response) {",
+							"    if (err) {",
+							"        console.log(err);",
+							"    } else {",
+							"        pm.variables.set(\"userId\", response.json().userId);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an account",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Should create an account\", function () {",
+							"    var response_body_string = pm.response.json();",
+							"    pm.expect(response_body_string.status).to.eql(\"Account created\");",
+							"});",
+							"",
+							"pm.test(\"Account Id should comply with RFC4122\", function () {",
+							"    var response_body_string = pm.response.json();",
+							"    pm.expect(response_body_string.accountId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/user/d1f9ad63-4d7a-4773-8d8e-cc6f167cdb95/account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"d1f9ad63-4d7a-4773-8d8e-cc6f167cdb95",
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"tuptus\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:3000/account/2341133",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/account/2341133",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"account",
+						"2341133"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Options root",
+			"request": {
+				"method": "OPTIONS",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users (as admin)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/user/adminc78-d566-4bfb-958f-d127bc8admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"adminc78-d566-4bfb-958f-d127bc8admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/vnd.api+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/user/563ba4f1-406b-4410-9c5d-3b7f3b1bf727",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"user",
+						"563ba4f1-406b-4410-9c5d-3b7f3b1bf727"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
